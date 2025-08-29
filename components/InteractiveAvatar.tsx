@@ -24,8 +24,8 @@ import { AVATARS } from "@/app/lib/constants";
 
 const DEFAULT_CONFIG: StartAvatarRequest = {
   quality: AvatarQuality.High,
-  avatarName: AVATARS[0].avatar_id,
-  knowledgeId: 4fc38dae65c842db82792b6f2f196a6f,
+  avatarName: "Elenora_IT_Sitting_public",
+  knowledgeId: "4fc38dae65c842db82792b6f2f196a6f",
   voice: {
     rate: 1.5,
     emotion: VoiceEmotion.EXCITED,
