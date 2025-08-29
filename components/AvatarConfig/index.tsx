@@ -56,28 +56,75 @@ export const AvatarConfig: React.FC<AvatarConfigProps> = ({
     <div className="relative flex flex-col gap-4 w-[550px] py-8 max-h-full overflow-y-auto px-4">
       <Field label="Custom Knowledge Base ID">
         <Input
+          placeholder="Enter custom knowledge base ID"
           value={config.knowledgeId}
-          />
+          onChange={(value) => onChange("knowledgeId", value)}
+        />
       </Field>
       <Field label="Avatar ID">
-        <Input
-          value={config.avatar_id}
-          />
+        <Select
+          isSelected={(option) =>
+            typeof option === "string"
+              ? !!selectedAvatar?.isCustom
+              : option.avatar_id === selectedAvatar?.avatarId
+          }
+          options={[...AVATARS, "CUSTOM"]}
+          placeholder="Select Avatar"
+          renderOption={(option) => {
+            return typeof option === "string"
+              ? "Custom Avatar ID"
+              : option.name;
+          }}
+          value={
+            selectedAvatar?.isCustom ? "Custom Avatar ID" : selectedAvatar?.name
+          }
+          onSelect={(option) => {
+            if (typeof option === "string") {
+              onChange("avatarName", "");
+            } else {
+              onChange("avatarName", option.avatar_id);
+            }
+          }}
+        />
       </Field>
-      <Field label="Language">
-        <Input
-          value={config.language}
+      {selectedAvatar?.isCustom && (
+        <Field label="Custom Avatar ID">
+          <Input
+            placeholder="Enter custom avatar ID"
+            value={config.avatarName}
+            onChange={(value) => onChange("avatarName", value)}
           />
+        </Field>
+      )}
+      <Field label="Language">
+        <Select
+          isSelected={(option) => option.value === config.language}
+          options={STT_LANGUAGE_LIST}
+          renderOption={(option) => option.label}
+          value={
+            STT_LANGUAGE_LIST.find((option) => option.value === config.language)
+              ?.label
+          }
+          onSelect={(option) => onChange("language", option.value)}
+        />
       </Field>
       <Field label="Avatar Quality">
-        <Input
+        <Select
+          isSelected={(option) => option === config.quality}
+          options={Object.values(AvatarQuality)}
+          renderOption={(option) => option}
           value={config.quality}
-          />
+          onSelect={(option) => onChange("quality", option)}
+        />
       </Field>
       <Field label="Voice Chat Transport">
-        <Input
+        <Select
+          isSelected={(option) => option === config.voiceChatTransport}
+          options={Object.values(VoiceChatTransport)}
+          renderOption={(option) => option}
           value={config.voiceChatTransport}
-          />
+          onSelect={(option) => onChange("voiceChatTransport", option)}
+        />
       </Field>
       {showMore && (
         <>
@@ -134,6 +181,12 @@ export const AvatarConfig: React.FC<AvatarConfigProps> = ({
           </Field>
         </>
       )}
+      <button
+        className="text-zinc-400 text-sm cursor-pointer w-full text-center bg-transparent"
+        onClick={() => setShowMore(!showMore)}
+      >
+        {showMore ? "Show less" : "Show more..."}
+      </button>
     </div>
   );
 };
